@@ -2,3 +2,9 @@ ssh/
 *.pem
 *.tfstate.backup
 *.tfstate
+
+/.terraform
+
+# Intelij IDE
+/.idea
+*.iml

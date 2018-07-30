@@ -1,17 +1,15 @@
 /* Setup our aws provider */
 provider "aws" {
-  access_key  = "${var.access_key}"
-  secret_key  = "${var.secret_key}"
   region      = "${var.region}"
 }
 resource "aws_instance" "master" {
-  ami           = "ami-26c43149"
+  ami           = "ami-731c2016"
   instance_type = "t2.micro"
   security_groups = ["${aws_security_group.swarm.name}"]
   key_name = "${aws_key_pair.deployer.key_name}"
   connection {
     user = "ubuntu"
-    key_file = "ssh/key"
+    private_key = "${file("terraform_aws_key.pem")}"
   }
   provisioner "remote-exec" {
     inline = [
@@ -36,16 +34,16 @@ resource "aws_instance" "master" {
 
 resource "aws_instance" "slave" {
   count         = 2
-  ami           = "ami-26c43149"
+  ami           = "ami-731c2016"
   instance_type = "t2.micro"
   security_groups = ["${aws_security_group.swarm.name}"]
   key_name = "${aws_key_pair.deployer.key_name}"
   connection {
     user = "ubuntu"
-    key_file = "ssh/key"
+    private_key = "${file("terraform_aws_key.pem")}"
   }
   provisioner "file" {
-    source = "key.pem"
+    source = "terraform_aws_key.pem"
     destination = "/home/ubuntu/key.pem"
   }
   provisioner "remote-exec" {
@@ -56,8 +54,8 @@ resource "aws_instance" "slave" {
       "sudo sh -c 'echo \"deb https://apt.dockerproject.org/repo ubuntu-trusty main\" > /etc/apt/sources.list.d/docker.list'",
       "sudo apt-get update",
       "sudo apt-get install -y docker-engine=1.12.0-0~trusty",
-      "sudo chmod 400 /home/ubuntu/test.pem",
-      "sudo scp -o StrictHostKeyChecking=no -o NoHostAuthenticationForLocalhost=yes -o UserKnownHostsFile=/dev/null -i test.pem ubuntu@${aws_instance.master.private_ip}:/home/ubuntu/token .",
+      "sudo chmod 400 /home/ubuntu/key.pem",
+      "sudo scp -o StrictHostKeyChecking=no -o NoHostAuthenticationForLocalhost=yes -o UserKnownHostsFile=/dev/null -i key.pem ubuntu@${aws_instance.master.private_ip}:/home/ubuntu/token .",
       "sudo docker swarm join --token $(cat /home/ubuntu/token) ${aws_instance.master.private_ip}:2377"
     ]
   }
