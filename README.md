@@ -31,3 +31,17 @@ If you want to terminate instances and destroy the configuration you may call:
 ```
 terraform destroy
 ```
+
+
+## ToDo
+
+Update README with steps to make it work
+- [ ] Generate key pair: ssh-keygen
+- [ ] key-pairs.tf: add public_key_path
+- [ ] variables.tf
+  - add region
+  - Since I have a `~/.aws/credentials`, I removed both keys
+- [ ] app-instances.tf: 
+  - key_file should be: private_key = "${file("terraform_aws_key.pem")}"
+  - changed ami-id 
+  - For the slaves.provisioner.file.source: "terraform_aws_key.pem"
