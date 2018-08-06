@@ -45,3 +45,4 @@ Update README with steps to make it work
   - key_file should be: private_key = "${file("terraform_aws_key.pem")}"
   - changed ami-id 
   - For the slaves.provisioner.file.source: "terraform_aws_key.pem"
+- [ ] Add nice Swarm demo: https://github.com/dockersamples/example-voting-app
