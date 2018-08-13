@@ -4,7 +4,8 @@ provider "aws" {
 }
 resource "aws_instance" "master" {
   ami           = "${var.ami}"
-  instance_type = "t2.micro"
+  instance_type = "m5.large"
+//  instance_type = "t2.micro"
   security_groups = ["${aws_security_group.swarm.name}"]
   key_name = "${aws_key_pair.deployer.key_name}"
   connection {
@@ -14,20 +15,16 @@ resource "aws_instance" "master" {
   provisioner "remote-exec" {
     scripts = [
       "scripts/install_docker.sh",
-      "scripts/swarm_manager.sh"
+//      "scripts/swarm_manager.sh"
     ]
   }
-  provisioner "file" {
-    source = "proj"
-    destination = "/home/ubuntu/"
-  }
-  tags = { 
+  tags = {
     Name = "swarm-master"
   }
 }
 
 resource "aws_instance" "slave" {
-  count         = 2
+  count         = 0
   ami           = "${var.ami}"
   instance_type = "t2.micro"
   security_groups = ["${aws_security_group.swarm.name}"]
