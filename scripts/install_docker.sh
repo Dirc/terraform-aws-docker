@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-sudo apt-get update
+
+sleep 30
 
 echo "Install required utils"
 sudo apt-get install -y \
@@ -8,16 +9,18 @@ sudo apt-get install -y \
   curl \
   software-properties-common
 
+sleep 30
 
 echo "Install Docker"
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo apt-key fingerprint 0EBFCD88
 sudo add-apt-repository \
    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
    $(lsb_release -cs) \
    stable"
 sudo apt-get update
-# Latest Docker
-sudo apt install -y docker-ce
+sudo apt-get upgrade -y docker-ce
+
 # Specific version
 #sudo apt-get install -y docker-ce=17.06.2~ce-0~ubuntu
 

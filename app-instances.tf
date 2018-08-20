@@ -12,10 +12,17 @@ resource "aws_instance" "master" {
     user = "ubuntu"
     private_key = "${file("terraform_aws_key.pem")}"
   }
+  provisioner "file" {
+    source = "scripts"
+    destination = "/tmp"
+  }
   provisioner "remote-exec" {
-    scripts = [
-      "scripts/install_docker.sh",
-//      "scripts/swarm_manager.sh"
+    inline = [
+      "chmod +x /tmp/scripts/*",
+      "ls -la /tmp/scripts",
+      "/tmp/scripts/install_docker.sh",
+      "/tmp/scripts/swarm_manager.sh",
+      "/tmp/scripts/install_ucp.sh ${aws_instance.master.public_ip} ${aws_instance.master.public_dns}"
     ]
   }
   tags = {
@@ -24,9 +31,10 @@ resource "aws_instance" "master" {
 }
 
 resource "aws_instance" "slave" {
+  // Keep count = 1 ensures location of DTR
   count         = 0
   ami           = "${var.ami}"
-  instance_type = "t2.micro"
+  instance_type = "t2.large"
   security_groups = ["${aws_security_group.swarm.name}"]
   key_name = "${aws_key_pair.deployer.key_name}"
   connection {
@@ -44,10 +52,10 @@ resource "aws_instance" "slave" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/scripts/*",
-      "/tmp/scripts/install_docker.sh",
       "ls -la /tmp/scripts",
-      "echo 'inline: ${aws_instance.master.private_ip}' ",
-      "/tmp/scripts/swarm_worker.sh ${aws_instance.master.private_ip}"
+      "/tmp/scripts/install_docker.sh",
+      "/tmp/scripts/swarm_worker.sh ${aws_instance.master.private_ip}",
+      "/tmp/scripts/install_dtr.sh ${aws_instance.master.public_dns}"
     ]
   }
   tags = { 

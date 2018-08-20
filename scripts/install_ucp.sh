@@ -6,7 +6,7 @@
 PUBLIC_IP=$1
 PUBLIC_HOSTNAME=$2
 
-docker container run \
+sudo docker container run \
   --rm \
   -it \
   --name ucp \
@@ -19,15 +19,15 @@ docker container run \
   --san ${PUBLIC_HOSTNAME},${PUBLIC_IP}
 
 
-
-docker container run \
-  --rm \
-  -it \
-  --name ucp \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  docker/ucp \
-  install \
-  --admin-username admin \
-  --admin-password admin123 \
-  --host-address $(hostname -i) \
-  --san ${aws_instance.master.public_ip},${aws_instance.master.public_dns}
+#
+#docker container run \
+#  --rm \
+#  -it \
+#  --name ucp \
+#  -v /var/run/docker.sock:/var/run/docker.sock \
+#  docker/ucp \
+#  install \
+#  --admin-username admin \
+#  --admin-password admin123 \
+#  --host-address $(hostname -i) \
+#  --san ${aws_instance.master.public_ip},${aws_instance.master.public_dns}

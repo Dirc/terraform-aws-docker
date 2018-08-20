@@ -1,7 +1,7 @@
 /* Default security group */
 resource "aws_security_group" "swarm" {
   name = "swarm-group"
-  description = "Default security group that allows inbound and outbound traffic from all instances in the VPC"
+  description = "Swarm security group that allows inbound and outbound traffic from all instances in the VPC"
 
   ingress {
     from_port   = "0"

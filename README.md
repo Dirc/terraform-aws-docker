@@ -46,3 +46,6 @@ Update README with steps to make it work
   - changed ami-id 
   - For the slaves.provisioner.file.source: "terraform_aws_key.pem"
 - [ ] Add nice Swarm demo: https://github.com/dockersamples/example-voting-app
+- [ ] Remove all sudo docker, since ubuntu user is part of the docker group
+- [ ] Ensure docker version 18+ is installed / or use container ami?
+- [ ] Seperate Swarm and UCP/DTR projects, since for the first free tier instances suffies.
