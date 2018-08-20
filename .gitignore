@@ -1,7 +1,6 @@
-ssh/
-*.pem
-*.tfstate.backup
-*.tfstate
+/*.pem
+/*.tfstate.backup
+/*.tfstate
 
 /.terraform
 
