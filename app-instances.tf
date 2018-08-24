@@ -32,7 +32,7 @@ resource "aws_instance" "master" {
 
 resource "aws_instance" "slave" {
   // Keep count = 1 ensures location of DTR
-  count         = 0
+  count         = 1
   ami           = "${var.ami}"
   instance_type = "t2.large"
   security_groups = ["${aws_security_group.swarm.name}"]
